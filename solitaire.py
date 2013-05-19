@@ -5,8 +5,6 @@ import sys
 import os
 import re
 
-#from __future__ import print_function
-
 #class declaration -
 class Deck(object):
 
