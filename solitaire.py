@@ -378,10 +378,11 @@ def printAdvPassString():
  deck.lockDeck()
  if '--quiet' not in sys.argv:
   print '\n Compiling password string...\n'
- print '',
+ print ''
  for j in deck.getChars(stringLength):
   for i in j.getKey(1):
-   print '\b'+i,
+   print i,
+   sys.stdout.write('')
  sys.exit(0) 
 
 #main function -
