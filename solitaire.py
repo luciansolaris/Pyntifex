@@ -5,6 +5,8 @@ import sys
 import os
 import re
 
+#from __future__ import print_function
+
 #class declaration -
 class Deck(object):
 
@@ -172,6 +174,12 @@ alphaDict={
 'stdcrypt':'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-'
 }
 
+def printString(inDeck,inLength):
+ print ''
+ for i in inDeck.getChars(inLength):
+  print i,
+  sys.stdout.write('')
+
 def loadState(inDeck, inFilename):
  file=open(inFilename,'rU')
  if 'PYNTIFEX_DECK\n' not in file:
@@ -269,10 +277,7 @@ def printKeyString():
   print inFile
   sys.exit(1)
  deck.lockDeck()
- print ''
- print '',
- for i in deck.getChars(stringLength):
-  print '\b'+i,
+ printString(deck,stringLength)
  if outFile=='':
   try:
    saveState(deck,inFile)
@@ -322,8 +327,7 @@ def printPassString():
  deck.makeDeck(alphabet*3, shuffleCount)
  deck.shuffleVal(shuffleCount)
  deck.lockDeck()
- for i in deck.getChars(stringLength):
-  print '\b'+i,
+ printString(deck,stringLength)
  sys.exit(0) 
 
 def printAdvPassString():
