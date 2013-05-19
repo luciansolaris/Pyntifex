@@ -1,0 +1,18 @@
+A quick explanation that doesn't do this justice:
+
+Class Deck() is the deck object.  It takes cards mutually exclusively via Deck().pushCard(tuple) or the combination of Deck().pushAlpha(object) and Deck().pushJoker(integer).  There are only two jokers.  The exclusiveness above is because the pushCard() method allows you to state the card's numeric value as well as face.  pushJoker() and pushAlpha() methods allow one to push face objects in a set order, but have no way of allowing the user to state what the value of the face is.
+
+Deck().shuffleDeck() shuffles the deck as it stands.  It allows you to iterate an alphabet into cards in the deck in order, then shuffle it up randomly.  A future feature would be to make the shuffling determinant based on a seed.  Deck().shuffleVal() mixes up the card values with face values, so A isn't always 1, B 2, C 3, etc.  shuffleVal() does shuffleDeck() 10 iterations because the shuffleVal() puts the deck into value order.
+
+After your deck has been set up in memory, either via iterated assignment or with the function (outside the class) loadState(deck, filename), it must be 'locked' before you can advance it.  It can be locked by calling the method Deck().lockDeck() and there is no 'unlocking.'  Locking it is a way to make the programmer realize that adding new cards via push*Blah*() is inadvisable.  It also walls the advancement method from being invoked until the programmer locks the deck.  The method to use to advance the deck according to Solitaire is Deck().advanceState().  It advances the state by 1, so to artificially advance the state without feedback, repeatedly call advanceState.
+
+Method Deck().getChars(length) is an iterable that yields THE NEXT CHARACTER.  This means that you don't advanceState() then getChars() to get a letter, but you getChars() for getting the NEXT letter or advanceState() for SKIPPING the next letter.  getChars() calls advanceState() before yielding.  Method Deck().getKey(length) returns a string and is not iterable.
+
+Method Deck().popState() is an iterable that will pop, from top to bottom, every card in the deck.  This 'pop' doesn't remove cards, merely reveals the state of the deck.
+
+Functions loadState(deck, filename) and saveState(deck, filename) open and write .deck files.  These functions check for a flag to ensure they're not dealing with an unrecognized file.  There is no cryptography in the storage of deck state, so an outside solution should be employed.  The rest of the functions are used by main() to perform the command-line operations invoked.
+
+Overall, I've tried to keep the code functional.  If I can get /any/ attention over this I will continue to work on it.
+
+Thank you for your interest in my project!
+-Daniel Duffield
