@@ -414,6 +414,7 @@ def main():
   print '\n Function \'advpass\':'
   print '  Outputs a complex password, like pass, but with this additional option:'
   print '  --count           | Number of decks in \'meta\' deck.'
+  print '  --quiet           | Suppress superfluous output.'
   print '\n  (advpass is more of a test than a function, therefore it\'s unsupported)'
   print '\n Available pre-made alphabets:'
   for i in alphaDict.keys():
