@@ -173,7 +173,6 @@ alphaDict={
 }
 
 def printString(inDeck,inLength):
- print ''
  for i in inDeck.getChars(inLength):
   print i,
   sys.stdout.write('')
@@ -276,6 +275,7 @@ def printKeyString():
   sys.exit(1)
  deck.lockDeck()
  printString(deck,stringLength)
+ print ''
  if outFile=='':
   try:
    saveState(deck,inFile)
@@ -326,6 +326,7 @@ def printPassString():
  deck.shuffleVal(shuffleCount)
  deck.lockDeck()
  printString(deck,stringLength)
+ print ''
  sys.exit(0) 
 
 def printAdvPassString():
@@ -380,9 +381,12 @@ def printAdvPassString():
   print '\n Compiling password string...\n'
  print ''
  for j in deck.getChars(stringLength):
-  for i in j.getKey(1):
-   print i,
-   sys.stdout.write('')
+  printString(j,1)
+  sys.stdout.write('')
+#  for i in j.getKey(1):
+#   print i,
+#   sys.stdout.write('')
+ print ''
  sys.exit(0) 
 
 #main function -
