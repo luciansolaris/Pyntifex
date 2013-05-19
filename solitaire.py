@@ -383,9 +383,6 @@ def printAdvPassString():
  for j in deck.getChars(stringLength):
   printString(j,1)
   sys.stdout.write('')
-#  for i in j.getKey(1):
-#   print i,
-#   sys.stdout.write('')
  print ''
  sys.exit(0) 
 
