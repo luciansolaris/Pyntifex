@@ -275,12 +275,12 @@ def printKeyString():
   sys.exit(1)
  deck.lockDeck()
  printString(deck,stringLength)
- print ''
  if outFile=='':
   try:
    saveState(deck,inFile)
   except:
    if '--quiet' not in sys.argv:
+    print ''
     print '\nError saving deck file:'
     print inFile
    sys.exit(1)
@@ -326,7 +326,6 @@ def printPassString():
  deck.shuffleVal(shuffleCount)
  deck.lockDeck()
  printString(deck,stringLength)
- print ''
  sys.exit(0) 
 
 def printAdvPassString():
@@ -379,7 +378,7 @@ def printAdvPassString():
  deck.lockDeck()
  if '--quiet' not in sys.argv:
   print '\n Compiling password string...\n'
- print ''
+  print ''
  for j in deck.getChars(stringLength):
   printString(j,1)
   sys.stdout.write('')
