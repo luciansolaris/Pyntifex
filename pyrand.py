@@ -1,4 +1,9 @@
 #!/usr/bin/python2.7
+'''This module exists to provide usable random integers from the /dev/random and /dev/urandom devices.
+
+To use, import this module and call either randomGet() or urandomGet().  Notice, randomGet() may take a while before returning.
+
+The other functions exist so the above two function can work.  Expect their contents, arguments, and returns to change.'''
 
 import os
 import struct
@@ -22,12 +27,20 @@ def makeAcceptableInt(inLower, inUpper, inInt):
   return int((((inUpper-inLower)/float(UINT32_MAX))+inLower)*inInt)
 
 def randomGet(inLower, inUpper, inCount):
+ '''Function randomGet() returns a list of random integers derived from /dev/random.
+ (int)inLower - Lower bound for requested random numbers.
+ (int)inUpper - Upper bound for requested random numbers.
+ (int)inCount - Number of random numbers to be returned in the list.'''
  if inLower>=0 and inUpper>inLower and inCount>0:
   return [makeAcceptableInt(inLower, inUpper, convertBytesToInt(randomDeviceBytes(4))) for _ in range(inCount)]
  else:
   raise Exception('(EE): Bad arguments for randomGet()')
 
 def urandomGet(inLower, inUpper, inCount):
+ '''Function urandomGet() returns a list of random integers derived from /dev/urandom.
+ (int)inLower - Lower bound for requested random numbers.
+ (int)inUpper - Upper bound for requested random numbers.
+ (int)inCount - Number of random numbers to be returned in the list.'''
  if inLower>=0 and inUpper>inLower and inCount>0:
   return [makeAcceptableInt(inLower, inUpper, convertBytesToInt(urandomDeviceBytes(4))) for _ in range(inCount)]
  else:

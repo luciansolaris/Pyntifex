@@ -1,4 +1,5 @@
 #!/usr/bin/python2.7
+'''Module solitaire is an implementation of Bruce Schneier's Pontifex playing card-based keystream algorithm.  It does this with a class called Deck().  This Deck() class takes objects as its contents, moves them around according to assignment and order, and spits them back when requested.  This implementation is more flexible than others on the net, namely it can be any size and will take any object (including other decks!).  This module also knows how to make decks out of alphabets, and the class provides methods for pushing objects onto a deck.  There is a lockDeck() method which prevents it from receiving any more 'cards', which would make no sense if you are calling advanceDeck().'''
 
 import pyrand
 import sys
@@ -7,9 +8,11 @@ import re
 
 #class declaration -
 class Deck(object):
+ '''Class Deck() is a pontifex deck which does an OK job reproducing the Pontifex keystream process outlined by Bruce Schneier.'''
 
  #constructor
  def __init__(self):
+  '''Constructor takes no arguments'''
   self.__deck=[]
   self.__numCards=0
   self.__lockState=0
@@ -21,6 +24,7 @@ class Deck(object):
    print inString
 
  def pushCard(self, inTuple):
+  '''Method pushCard() takes a Tuple of size 2, being (card value, card contents).  Cannot be used with a deck pushAlpha() or pushJoker() has been used on.'''
   if not self.__lockState and self.__pushLockState!=2:
    self.__pushLockState=1
    self.__numCards+=1
@@ -29,6 +33,7 @@ class Deck(object):
    raise Exception('(EE): Deck feature locked in current state, check programming!')
 
  def pushAlpha(self, inObj):
+  '''Method pushAlpha() takes an object and puts it on the deck.  Cannot be used with a deck pushCard() has been used on.'''
   if not self.__lockState and self.__pushLockState!=1:
    self.__pushLockState=2
    self.__numCards+=1
@@ -37,6 +42,7 @@ class Deck(object):
    raise Exception('(EE): Deck feature locked in current state, check programming!')
 
  def pushJoker(self, inJoker):
+  '''Method pushJoker() takes a number, 1 or 2, and puts that valued Joker on the deck.  Cannot be used with a deck pushCard() has been used on.'''
   if not self.__lockState and self.__pushLockState!=1:
    self.__pushLockState=2
    if inJoker<=2 and inJoker>=1:
@@ -47,6 +53,7 @@ class Deck(object):
    raise Exception('(EE): Deck feature locked in current state, check programming!')
 
  def shuffleVal(self, inCount):
+  '''Method shuffleVal() takes the deck and shuffles the values relative to contents.  Returns a Deck().'''
   if not self.__lockState:
    for j in range(inCount):
     deck2=[]
@@ -65,6 +72,7 @@ class Deck(object):
    raise Exception('(EE): Deck locked before accessing protected feature')
 
  def shuffleDeck(self, inCount):
+  '''Method shuffleDeck() takes the deck and shuffles the positions of each card in he deck.  Returns a Deck().'''
   if not self.__lockState:
    deck2=[]
    for ij in range(inCount):
@@ -75,10 +83,12 @@ class Deck(object):
    raise Exception('(EE): Deck locked before accessing protected feature')
 
  def popState(self):
+  '''Method popState() is an iterator that takes no arguments, and pops each card off the deck (no card removal).'''
   for i in range(len(self.__deck)):
    yield (i+1,self.__deck[i][0],self.__deck[i][1])
 
  def lockDeck(self):
+  '''Method lockDeck() locks the deck and makes it advanceable, and prevents new cards from being put on.'''
   try:
    if self.__deck.index((-1,None))+1 and self.__deck.index((-2,None))+1:
     self.__lockState=1
@@ -88,16 +98,23 @@ class Deck(object):
    raise Exception('(EE): Lacking one or more Jokers at lock')
 
  def makeDeck(self, inAlphaString, inShuffleCount):
+  '''Method makeDeck() is an internal deck maker method which puts each letter in an alphabet into a card and shuffles the whole deck.  Works only on an empty deck.  Returns nothing.  Arguments are:
+  (rawstr)inAlphaString - Alphabet string to use in making the deck.
+  (int)inShuffleCount - Number of times to shuffle the deck (the higher, the more secure).'''
   if not self.__lockState:
-   for i in inAlphaString:
-    self.pushAlpha(i)
-   self.pushJoker(1)
-   self.pushJoker(2)
-   self.shuffleDeck(inShuffleCount)
+   if len(self.__deck)==0:
+    for i in inAlphaString:
+     self.pushAlpha(i)
+    self.pushJoker(1)
+    self.pushJoker(2)
+    self.shuffleDeck(inShuffleCount)
+   else:
+    raise Exception('(EE): Deck not empty before accessing makeDeck()')
   else:
    raise Exception('(EE): Deck locked before accessing protected feature')
 
  def advanceState(self):
+  '''Method advanceState() advances the state of the Deck() according to the Pontifex algorithm.  There is no reversing this stepping in state.'''
   if self.__lockState:
    deck2=[]
    smJokerLoc=self.__deck.index((-1,None))
@@ -141,6 +158,7 @@ class Deck(object):
    raise Exception('(EE): Deck not locked before accessing protected feature')
 
  def getChars(self, inSize):
+  '''Method getChars() is an iterator which takes an integer argument and returns the number of next characters up to the integer provided in count.  Yields an object'''
   i=0
   while i<inSize:
    self.advanceState()
@@ -153,15 +171,27 @@ class Deck(object):
     yield yieldChar
 
  def getKey(self, inSize):
+  '''Method getKey() takes an integer argument and returns a string of equal size to the magnatude of the provided integer.'''
   outString=''
   for i in self.getChars(inSize):
    outString=outString+i
   return outString
 
+ def getObj(self):
+  '''Method getObj() returns the next object.  Advances state automatically then gets the object.'''
+  while 1==1:
+   self.advanceState()
+   if self.__deck[0][0]<0:
+    returnChar=self.__deck[-2][1]
+   else:
+    returnChar=self.__deck[self.__deck[0][0]][1]
+   if type(returnChar)!=type(None):
+    return returnChar
+
 alphaDict={
-'complex':'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\'\",.<>`~[]{}/=\?+|;:-_',
-'dvkextended':'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\'\",.<>/=?+;:-_',
-'extended':'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\'\",.<>[]{}/?;:',
+'complex':'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\'\",.<>`~[]{}/=\?+|;:-_!@#$%^&*()',
+'dvkextended':'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\'\",.<>/=?+;:-_!@#$%^&*()',
+'extended':'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\'\",.<>[]{}/?;:!@#$%^&*()',
 'standard':'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
 'lowercase':'abcdefghijklmnopqrstuvwxyz',
 'lowercasenums':'abcdefghijklmnopqrstuvwxyz0123456789',
@@ -171,13 +201,16 @@ alphaDict={
 'solitaire':'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ',
 'stdcrypt':'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-'
 }
+'''This is a dictionary of common alphabets.  This dictionary can be referenced by functions/methods outside the solitaire module.'''
 
 def printString(inDeck,inLength):
+ '''Function printString() takes two arguments, a Deck and an integer.  This function prints a number of characters to screen in magnatude to the size of the integer provided, from the provided Deck.'''
  for i in inDeck.getChars(inLength):
   print i,
   sys.stdout.write('')
 
 def loadState(inDeck, inFilename):
+ '''Function loadState takes two arguments, a Deck and a filename string.  Create the deck first then pass it to this function with a path to a saved deck state.'''
  file=open(inFilename,'rU')
  if 'PYNTIFEX_DECK\n' not in file:
   raise Exception('(EE): Attempted to load deck file lacking magic string')
@@ -195,6 +228,7 @@ def loadState(inDeck, inFilename):
  inDeck.lockDeck()
 
 def saveState(inDeck, inFilename):
+ '''Function saveState() takes two arguments, a Deck and a filename string.  Take a deck that has been created/used then pass it to this function with a path to save the deck state into a file at that path.'''
  outFile=open(inFilename,'w')
  outFile.truncate(0)
  outFile.write('PYNTIFEX_DECK\n')
@@ -206,6 +240,7 @@ def saveState(inDeck, inFilename):
  outFile.close()
 
 def makeDeckFile():
+ '''Called by method's main(), use at your own risk!'''
  alphabet=''
  outFile=''
  shuffleCount=100
@@ -252,6 +287,7 @@ def makeDeckFile():
  sys.exit(0)
 
 def printKeyString():
+ '''Called by method's main(), use at your own risk!'''
  inFile=''
  outFile=''
  keyString=''
@@ -295,6 +331,7 @@ def printKeyString():
  sys.exit(0)
 
 def printPassString():
+ '''Called by method's main(), use at your own risk!'''
  shuffleCount=100
  alphabet=''
  stringLength=0
@@ -329,6 +366,7 @@ def printPassString():
  sys.exit(0) 
 
 def printAdvPassString():
+ '''Called by method's main(), use at your own risk!'''
  if '--quiet' not in sys.argv:
   print '\nUnofficial function selected.  Advpass can take a'
   print ' really long time to output.  Output latency is pro-'
