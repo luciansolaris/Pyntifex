@@ -1,5 +1,7 @@
 A quick explanation that doesn't do this justice:
 
+NEW (20130613): I have added password.py to supercede the pass and advPass command-line options on solitaire.py.  It uses 3 composite decks and Vtableau to come up with strong, hard to reproduce passwords.  Formatter.py accompanies it.
+
 Class Deck() is the deck object.  It takes cards mutually exclusively via Deck().pushCard(tuple) or the combination of Deck().pushAlpha(object) and Deck().pushJoker(integer).  There are only two jokers.  The exclusiveness above is because the pushCard() method allows you to state the card's numeric value as well as face.  pushJoker() and pushAlpha() methods allow one to push face objects in a set order, but have no way of allowing the user to state what the value of the face is.
 
 Deck().shuffleDeck() shuffles the deck as it stands.  It allows you to iterate an alphabet into cards in the deck in order, then shuffle it up randomly.  A future feature would be to make the shuffling determinant based on a seed.  Deck().shuffleVal() mixes up the card values with face values, so A isn't always 1, B 2, C 3, etc.  shuffleVal() does shuffleDeck() 10 iterations because the shuffleVal() puts the deck into value order.

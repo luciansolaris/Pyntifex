@@ -53,7 +53,7 @@ class Deck(object):
    raise Exception('(EE): Deck feature locked in current state, check programming!')
 
  def shuffleVal(self, inCount):
-  '''Method shuffleVal() takes the deck and shuffles the values relative to contents.  Returns a Deck().'''
+  '''Method shuffleVal() takes the deck and shuffles the values relative to contents.'''
   if not self.__lockState:
    for j in range(inCount):
     deck2=[]
@@ -72,7 +72,7 @@ class Deck(object):
    raise Exception('(EE): Deck locked before accessing protected feature')
 
  def shuffleDeck(self, inCount):
-  '''Method shuffleDeck() takes the deck and shuffles the positions of each card in he deck.  Returns a Deck().'''
+  '''Method shuffleDeck() takes the deck and shuffles the positions of each card in he deck.'''
   if not self.__lockState:
    deck2=[]
    for ij in range(inCount):
