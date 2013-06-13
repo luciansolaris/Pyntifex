@@ -12,7 +12,7 @@ class PasswordMaker(object):
  '''Class PasswordMaker makes passwords and prints them.'''
  def __init__(self, inAlpha, charsPerGroup=8, groupsPerLine=6):
   '''Constructor is to be called with the following options:
-  (rawstr)inAlpha - Alphabet to derive password(s) from.
+  (rawstr)inAlpha - Alphabet name (from solitaire module alphaDict) to derive password(s) from.
   (int)charsPerGroup - [Optional] Number of characters per group (Default 8).
   (int)groupsPerLine - [Optional] Number of groups per line (Default 6).'''
   self.__alpha=solitaire.alphaDict.get(inAlpha)
@@ -33,7 +33,7 @@ class PasswordMaker(object):
   deck.pushJoker(1)
   deck.pushJoker(2)
   deck.shuffleVal(100)
-  deck.shuffleDeck(100)
+  deck.shuffleDeck(10)
   deck.lockDeck()
   return deck
 
