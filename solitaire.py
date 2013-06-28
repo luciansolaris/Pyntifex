@@ -1,7 +1,8 @@
 #!/usr/bin/python2.7
 '''Module solitaire is an implementation of Bruce Schneier's Pontifex playing card-based keystream algorithm.  It does this with a class called Deck().  This Deck() class takes objects as its contents, moves them around according to assignment and order, and spits them back when requested.  This implementation is more flexible than others on the net, namely it can be any size and will take any object (including other decks!).  This module also knows how to make decks out of alphabets, and the class provides methods for pushing objects onto a deck.  There is a lockDeck() method which prevents it from receiving any more 'cards', which would make no sense if you are calling advanceDeck().'''
 
-import pyrand
+import random
+#import pyrand
 import sys
 import os
 import re
@@ -18,6 +19,7 @@ class Deck(object):
   self.__lockState=0
   self.__debug=0
   self.__pushLockState=0
+  self.__randomGenerator=random.SystemRandom()
 
  def printDebug(self, inString):
   if self.__debug==1:
@@ -60,14 +62,14 @@ class Deck(object):
     tmp=None
     offset=-1
     for i in range(len(self.__deck)):
-     tmp=(i,self.__deck.pop(pyrand.urandomGet(0,2**16,1)[0]%len(self.__deck)))
+     tmp=(i,self.__deck.pop(self.__randomGenerator.getrandbits(256)%len(self.__deck)))
      if tmp[1][1]==None:
       deck2.append((tmp[1][0],None))
       offset+=1
      else:
       deck2.append((tmp[0]-offset,tmp[1][1]))
     self.__deck=deck2
-    self.shuffleDeck(10)
+    self.shuffleDeck(1)
   else:
    raise Exception('(EE): Deck locked before accessing protected feature')
 
@@ -77,7 +79,7 @@ class Deck(object):
    deck2=[]
    for ij in range(inCount):
     for i in range(len(self.__deck)):
-     deck2.append(self.__deck.pop(pyrand.urandomGet(0,2**16,1)[0]%len(self.__deck)))
+     deck2.append(self.__deck.pop(self.__randomGenerator.getrandbits(256)%len(self.__deck)))
     self.__deck=deck2
   else:
    raise Exception('(EE): Deck locked before accessing protected feature')
@@ -199,7 +201,8 @@ alphaDict={
 'uppercasenums':'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
 'numbers':'0123456789',
 'solitaire':'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ',
-'stdcrypt':'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-'
+'stdcrypt':'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-',
+'bothcase':'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 }
 '''This is a dictionary of common alphabets.  This dictionary can be referenced by functions/methods outside the solitaire module.'''
 

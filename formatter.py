@@ -18,11 +18,13 @@ class Formatter(object):
   self.__groupsPerLine=int(inLineSize)-1
   self.__separatorChar=str(inSeparator)
 
- def format(self, inString):
+ def format(self, inString, count=-1):
   '''Takes a string and returns a formatted string, depending on constructor options'''
   chars=0
   groups=0
   lines=0
+  if count>-1:
+   lines=count-1
   returnString=""
   for char in str(inString):
    if chars==self.__charsPerGroup and not (groups==self.__groupsPerLine):
@@ -35,7 +37,10 @@ class Formatter(object):
     lines+=1
     returnString=returnString+"\n"
    if chars==0 and groups==0:
-    returnString=returnString+str(lines+1)+"):\t"
+    tabstr="\t"
+    if lines < 10000:
+     tabstr+=tabstr
+    returnString=returnString+str(lines+1)+"):"+tabstr
    returnString=returnString+char
    chars+=1
   return returnString
