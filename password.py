@@ -86,11 +86,17 @@ class PasswordMaker(object):
 
 def main():
  if '--help' in sys.argv:
-  print "Usage: ./command AlphabetName CharsPerGroup GroupsPerLine Lines\n"
+  print "Usage: ./command AlphabetName CharsPerGroup GroupsPerLine Lines PoolSize FileName\n"
   print "Alphabets available:"
   for key in solitaire.alphaDict.keys():
    print key,':',solitaire.alphaDict.get(key)
   sys.exit(0)
+ try:
+  0<sys.argv[5]
+ except:
+   print "Incorrect syntax,",
+   sys.argv.append('--help')
+   main()
  groupLength=int(sys.argv[2])
  numGroups=int(sys.argv[3])
  numPasswords=int(sys.argv[4])
@@ -107,11 +113,11 @@ def main():
   poolsize=9
  maker1.initializePool(poolsize)
  print '\nPool output follows this line:'
- filename=''
+ filename=None
  try:
   filename=str(sys.argv[6])
  except Exception:
-  filename=''
+  filename=None
  maker1.printPassword(maker1.makePassword(groupLength*numGroups,numPasswords),filename)
  sys.exit(0)
 
